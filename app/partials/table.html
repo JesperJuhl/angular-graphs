@@ -1,0 +1,19 @@
+<div ng-controller="TableCtrl">
+<p>Table display of questionnaire results</p>
+<table>
+	<tr>
+		<th>Respondent</th>
+		<th>Age</th>
+		<th>Gender</th>
+		<th>Question</th>
+		<th>Answer</th>
+	</tr>
+	<tr ng-repeat="tableRow in tableRows">
+		<td>{{tableRow.resp_name}}</td>
+		<td>{{tableRow.resp_age}}</td>
+		<td>{{tableRow.resp_gender}}</td>
+		<td>{{tableRow.ques_text}}</td>
+		<td>{{tableRow.answ_text}}</td>
+	</tr>
+</table>
+</div>

@@ -2,10 +2,13 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('MyCtrl1', [function() {
+angular.module('questApp.controllers', []).
+	controller('TableCtrl', ['$scope', 'questTable', function($scope, questTable) {
+	$scope.tableRows = questTable.query();
+  }])
+  .controller('AnswersCtrl', [function() {
 
   }])
-  .controller('MyCtrl2', [function() {
+  .controller('GroupsCtrl', [function() {
 
   }]);
