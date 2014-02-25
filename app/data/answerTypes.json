@@ -1,0 +1,62 @@
+[
+    {
+        "answ_type": "1"
+        ,"answ_id": "1"
+        ,"answ_text": "Yes"
+    }
+   ,{
+        "answ_type": "1"
+        ,"answ_id": "2"
+        ,"answ_text": "No"
+    }
+   ,{
+        "answ_type": "2"
+        ,"answ_id": "1"
+        ,"answ_text": "Exceptional"
+    }
+   ,{
+        "answ_type": "2"
+        ,"answ_id": "2"
+        ,"answ_text": "Very Good"
+    }
+   ,{
+        "answ_type": "2"
+        ,"answ_id": "3"
+        ,"answ_text": "Satisfactory"
+    }
+   ,{
+        "answ_type": "2"
+        ,"answ_id": "4"
+        ,"answ_text": "Marginal"
+    }
+   ,{
+        "answ_type": "2"
+        ,"answ_id": "5"
+        ,"answ_text": "Poor"
+    }
+   ,{
+        "answ_type": "3"
+        ,"answ_id": "1"
+        ,"answ_text": "Daily"
+    }
+   ,{
+        "answ_type": "3"
+        ,"answ_id": "2"
+        ,"answ_text": "Once a week"
+    }
+   ,{
+        "answ_type": "3"
+        ,"answ_id": "3"
+        ,"answ_text": "Once a month"
+    }
+   ,{
+        "answ_type": "3"
+        ,"answ_id": "4"
+        ,"answ_text": "Once a year"
+    }
+   ,{
+        "answ_type": "3"
+        ,"answ_id": "5"
+        ,"answ_text": "Never"
+    }
+]

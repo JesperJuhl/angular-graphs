@@ -1,0 +1,17 @@
+[
+    {
+        "ques_id": "1"
+        ,"ques_text": "Have you used this service before?"
+        ,"answ_type": "1"
+    }
+   ,{
+        "ques_id": "2"
+        ,"ques_text": "How would you rate this service?"
+        ,"answ_type": "2"
+    }
+   ,{
+        "ques_id": "3"
+        ,"ques_text": "How often do you expect to use this service"
+        ,"answ_type": "3"
+    }
+]

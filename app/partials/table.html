@@ -1,5 +1,8 @@
 <div ng-controller="TableCtrl">
-<p>Table display of questionnaire results</p>
+<p>
+	Table display of questionnaire results 
+	<button ng-click="tableSearchReset()">Clear filters</button>
+</p>
 <table>
 	<tr>
 		<th>Respondent</th>
@@ -8,10 +11,38 @@
 		<th>Question</th>
 		<th>Answer</th>
 	</tr>
-	<tr ng-repeat="tableRow in tableRows">
+	<tr>
+		<td><input ng-model="tableSearch.resp_name"></td>
+		<td><input ng-model="tableSearch.resp_age"></td>
+		<td>
+			<select ng-model="tableSearch.resp_gender">
+				<option value="f">
+					{{gender.female | genderIcon}}
+				</option>
+				<option value="m">
+					{{gender.male | genderIcon}}
+				</option>
+			</select>
+		</td>
+		<td>
+			<select ng-model="tableSearch.ques_id">
+				<option ng-repeat="questionRow in questionRows" value={{questionRow.ques_id}}>
+					{{questionRow.ques_text}}
+				</option>
+			</select>
+		</td>
+		<td>
+			<select ng-model="tableSearch.answ_id">
+				<option ng-repeat="answerTypeRow in answerTypeRows | filter:answFilter" value={{answerTypeRow.answ_id}}>
+					{{answerTypeRow.answ_text}}
+				</option>
+			</select>
+		</td>
+	</tr>
+	<tr ng-repeat="tableRow in tableRows | filter:tableSearch">
 		<td>{{tableRow.resp_name}}</td>
 		<td>{{tableRow.resp_age}}</td>
-		<td>{{tableRow.resp_gender}}</td>
+		<td>{{tableRow.resp_gender | genderIcon}}</td>
 		<td>{{tableRow.ques_text}}</td>
 		<td>{{tableRow.answ_text}}</td>
 	</tr>

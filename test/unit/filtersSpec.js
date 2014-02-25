@@ -2,18 +2,17 @@
 
 /* jasmine specs for filters go here */
 
-/* describe('filter', function() {
-  beforeEach(module('myApp.filters'));
-
-
-  describe('interpolate', function() {
-    beforeEach(module(function($provide) {
-      $provide.value('version', 'TEST_VER');
-    }));
-
-
-    it('should replace VERSION', inject(function(interpolateFilter) {
-      expect(interpolateFilter('before %VERSION% after')).toEqual('before TEST_VER after');
-    }));
-  });
-}); */
+describe('Question App Filters: ', function() {
+	
+	//Load App Filters
+	beforeEach(module('questApp.filters'));
+	
+	describe('Filter genderIcon: ', function() {
+		it('should convert f/m to gender symbols', inject(function(genderIconFilter) {
+			expect(genderIconFilter('f')).toBe('\u2640');
+			expect(genderIconFilter('m')).toBe('\u2642');
+			expect(genderIconFilter('e')).toBe('?');
+		}));
+	});
+	
+}); //questApp Filters

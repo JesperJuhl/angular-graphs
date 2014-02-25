@@ -3,7 +3,8 @@
 angular.module('questApp', [
   'ngRoute',
   'questApp.services',
-  'questApp.controllers'
+  'questApp.controllers',
+  'questApp.filters'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/table', {templateUrl: 'partials/table.html', controller: 'TableCtrl'});
