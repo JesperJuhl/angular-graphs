@@ -1,1 +1,49 @@
-<p>This is Graph number 1</p>
+<div ng-controller="AnswersCtrl">
+
+	<h1>
+	Distribution of answers for selected question
+	<button ng-click="selectedReset()">Clear selections</button>
+	</h1>
+	
+	<table>
+		<tr>
+			<td>
+				<div>Select question</div>
+				<select ng-model="selected.ques_id">
+					<option ng-repeat="quest in questions" value={{quest.ques_id}}>{{quest.ques_text}}</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>Age Group</td>
+			<td>Gender</td>
+		</tr>
+		<tr>
+			<td>
+				<select ng-model="selected.ageGroup">
+					<option ng-repeat="ageGroup in ageGroups" value={{ageGroup.id}}>{{ageGroup.lgtxt}}</option>
+				</select>
+			</td>
+			<td>
+				<select ng-model="selected.gender">
+					<option value="f">Female</option>
+					<option value="m">Male</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<div>Result table</div>
+	<table>
+		<tr>
+		<td ng-repeat="answer in table">{{answer.id}}</td>
+		</tr>
+		<tr>
+		<td ng-repeat="answer in table">{{answer.text}}</td>
+		</tr>
+		<tr>
+		<td ng-repeat="answer in table">{{answer.count}}</td>
+		</tr>
+	</table>
+</div>

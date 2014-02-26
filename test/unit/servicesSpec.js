@@ -111,4 +111,48 @@ describe('Question App Services: ', function() {
 		
 	}); //Decribe questFileRead
 
+	describe('questAgeGroups service: ', function() {
+		
+		describe('Functions: ', function() {
+
+			it('getGroup should derive Age Groups from age', inject(function(questAgeGroups) {
+				var result = questAgeGroups.getGroup(20);
+				expect(result.to).toEqual(20);
+				result = questAgeGroups.getGroup(33);
+				expect(result.from).toEqual(31);
+				//Age 0 or 1000 should not return any values
+				result = questAgeGroups.getGroup(0);
+				expect(result).toBeUndefined();
+				result = questAgeGroups.getGroup(1000);
+				expect(result).toBeUndefined();
+			}));		
+		
+			it('getAgeInterval should derive from/to from id', inject(function(questAgeGroups) {
+				var result = questAgeGroups.getAgeInterval(3);
+				expect(result.to).toEqual(40);
+				result = questAgeGroups.getAgeInterval(7);
+				expect(result).toEqual({from:71,to:80});
+				//Id 0 or 10 should not return any values
+				result = questAgeGroups.getAgeInterval(0);
+				expect(result).toBeUndefined();
+				result = questAgeGroups.getAgeInterval(10);
+				expect(result).toBeUndefined();
+			}));		
+
+			it('getText should derive sh/lg from id', inject(function(questAgeGroups) {
+				var result = questAgeGroups.getText(3);
+				expect(result.sh).toEqual("31-40");
+				result = questAgeGroups.getText(5);
+				expect(result).toEqual({sh:"51-60",lg:"51 to 60 years"});
+				//Id 0 or 10 should not return any values
+				result = questAgeGroups.getText(0);
+				expect(result).toBeUndefined();
+				result = questAgeGroups.getText(10);
+				expect(result).toBeUndefined();
+			}));		
+
+		}); //Describe Functions
+		
+	}); //Decribe questAgeGroups
+	
 }); //Quest App
