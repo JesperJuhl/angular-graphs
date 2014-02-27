@@ -110,6 +110,7 @@ angular.module('questApp.controllers', []).
 		$scope.selectedReset = function() {
 			$scope.selected = {};
 		}
+		$scope.tableVisible = false;
 		$scope.$watch('selected.ques_id', function() {
 			//Derive table with number of answers based on selections
 			if (angular.isDefined($scope.selected)) {
@@ -123,33 +124,37 @@ angular.module('questApp.controllers', []).
 						}
 					}
 					//Get possible answers and set count to 0
-					var answers = new Array();
 					var answer;
 					var answerCount = 0;
+					var answers = new Array();
 					for (var i=0;i<$scope.answerTypes.length;i++) {
 						if ($scope.answerTypes[i].answ_type==answerType) {
 							answer = {
 								 id    : $scope.answerTypes[i].answ_id
 								,text  : $scope.answerTypes[i].answ_text
-								,count : 0
-								,pct   : 0
 							}
 							answers.push(answer);
 							answerCount++;
 						}
 					}
-					$scope.headerTable = answers;
+					$scope.headerRow = answers;
 					//Create a row with answers for all Age Groups (id's)
 					var answerTable = {};
 					for (var i=0;i<$scope.ageGroups.length;i++) {
-						answerTable[$scope.ageGroups[i].id] = new Array();
-						for (var j=0;j<answerCount;j++)
-						answerTable[$scope.ageGroups[i].id][j] = {
-							id   : answers[j].id,
-							text : answers[j].text,
-							count: answers[j].count,
-							pct  : answers[j].pct
-						}
+						answerTable[$scope.ageGroups[i].id] = {
+							 title : {
+								 id   : $scope.ageGroups[i].id
+								,shtxt: $scope.ageGroups[i].shtxt
+								,lgtxt: $scope.ageGroups[i].lgtxt
+							}
+							,values: {}
+						};
+						for (var j=0;j<answerCount;j++) {
+							answerTable[$scope.ageGroups[i].id].values[answers[j].id] = {
+								 count: 0
+								,pct  : 0
+							}
+						}	
 					}
 					//Append to scope
 					$scope.table = answerTable;
@@ -173,10 +178,11 @@ angular.module('questApp.controllers', []).
 					//Transfer counted values to table
 					for (var i=0;i<$scope.ageGroups.length;i++) {
 						for (var j=0;j<answerCount;j++) {
-							var ageGroupId =$scope.ageGroups[i].id;
+							var ageGroupId = $scope.ageGroups[i].id;
 							if (angular.isDefined(count[ageGroupId])) {
-								if (angular.isDefined(count[ageGroupId][j])) {
-									$scope.table[ageGroupId][j].count = count[ageGroupId][j];
+								var answerId = answers[j].id;
+								if (angular.isDefined(count[ageGroupId][answerId])) {
+									$scope.table[ageGroupId].values[answerId].count = count[ageGroupId][answerId];
 								}
 							}
 						}
@@ -187,6 +193,17 @@ angular.module('questApp.controllers', []).
 				}
 			} else {
 				$scope.table = {}
+			}
+		});
+		$scope.$watch('table', function() {
+			if (angular.isDefined($scope.table)) {
+				if (angular.isDefined($scope.table[$scope.ageGroups[0].id])) {
+					$scope.tableVisible = true;
+				} else {
+					$scope.tableVisible = false;
+				}
+			} else {
+				$scope.tableVisible = false;
 			}
 		});
   }])

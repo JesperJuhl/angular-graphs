@@ -1,8 +1,6 @@
 <div ng-controller="GroupsCtrl">
-	<h1>
-	Percentage distribution of answers for Age Groups for selected question
+	<h1 id="groupsTitle">Percentage distribution of answers for Age Groups for selected question</h1>
 	<button ng-click="selectedReset()">Clear selections</button>
-	</h1>
 	
 	<table>
 		<tr>
@@ -15,14 +13,14 @@
 		</tr>
 	</table>
 	<div>Result table</div>
-	<table>
+	<table class="gridtable" id="resultTable">
 		<tr>
-			<td></td>
-			<td ng-repeat="header in headerTable">{{header.text}}</td>
+			<th ng-show="tableVisible">Age Groups</th>
+			<th ng-repeat="header in headerRow">{{header.id}} - {{header.text}}</th>
 		</tr>
-		<tr ng-repeat="answerRows in table">{{answerRows | json}}
-		<td></td>
-		<td ng-repeat="answer in answerRows">{{answer.count}}
+		<tr ng-repeat="answerRow in table">
+		<td>{{answerRow.title.shtxt}}</td>
+		<td ng-repeat="value in answerRow.values">{{value.count}}
 		</td>
 		</tr>
 	</table>

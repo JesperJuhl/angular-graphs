@@ -1,9 +1,8 @@
 <div ng-controller="TableCtrl">
-<h1>
-	Table display of questionnaire results 
-	<button ng-click="tableSearchReset()">Clear filters</button>
-</h1>
-<table>
+	<h1 id="tableTitle">Table display of questionnaire results</h1>
+	<button id="clear" ng-click="tableSearchReset()">Clear filters</button>
+
+<table class="gridtable">
 	<tr>
 		<th>Respondent</th>
 		<th>Age</th>

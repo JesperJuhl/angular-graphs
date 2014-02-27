@@ -285,7 +285,18 @@ describe('Question App Controllers: ', function() {
 			expect(scope.table).not.toBeDefined();
 			scope.selected.ques_id = "2";
 			scope.$apply();
-			expect(scope.table[3][1].count).toEqual(1);
+			expect(scope.table[3].values[1].count).toEqual(1);
+		}));
+		
+		it('should watch table and update tableVisible accordingly', inject(function() {
+			//Table are changed by changing ques_id
+			scope.selected = {
+				ques_id: ""
+			};
+			expect(scope.tableVisible).toEqual(false);
+			scope.selected.ques_id = "2";
+			scope.$apply();
+			expect(scope.tableVisible).toEqual(true);
 		}));
 	
 	}); //Describe GroupsCtrl
