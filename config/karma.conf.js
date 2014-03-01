@@ -5,7 +5,9 @@ module.exports = function(config){
     files : [
       'app/lib/angular/angular.js',
       'app/lib/angular/angular-*.js',
+      'app/lib/chartjs/Chart.js',
       'test/lib/angular/angular-mocks.js',
+      'test/lib/googleChart/loadScript.js',
       'app/js/**/*.js',
       'test/unit/**/*.js'
     ],

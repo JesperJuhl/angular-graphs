@@ -174,13 +174,13 @@ describe('Question App Controllers: ', function() {
 		}));
 	}); //Decribe TableCtrl
 	
-	describe('AnswersCtrl controller: ', function() {
+	describe('AnswersChartjsCtrl controller: ', function() {
 		var scope, answersCtrlTest;
 
-		//Get controller
 		beforeEach(inject(function($rootScope, $controller) {
+			//Get controller
 			scope = $rootScope.$new();
-			answersCtrlTest = $controller('AnswersCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock} );
+			answersCtrlTest = $controller('AnswersChartjsCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock} );
 		}));
 		
 		it('should use service questAgeGroups property ageGroups', inject(function() {
@@ -241,7 +241,76 @@ describe('Question App Controllers: ', function() {
 			expect(scope.table[0].count).toEqual(1);
 		}));
 
-	}); //Decribe AnswersCtrl
+	}); //Decribe AnswersChartjsCtrl
+
+	describe('AnswersGoogleCtrl controller: ', function() {
+		var scope, answersCtrlTest;
+
+		beforeEach(inject(function($rootScope, $controller) {
+			//Get controller
+			scope = $rootScope.$new();
+			answersCtrlTest = $controller('AnswersGoogleCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock} );
+		}));
+		
+		it('should use service questAgeGroups property ageGroups', inject(function() {
+			expect(scope.ageGroups).toEqual(questAgeGroupsMock.ageGroups);
+		}));
+
+		it('should use service questFileRead method queryTable', inject(function() {
+			expect(scope.answers).toEqual(resultTableRows);
+		}));
+
+		it('should use service questFileRead method queryQuestions', inject(function() {
+			expect(scope.questions).toEqual(resultQuestionRows);
+		}));
+		
+		it('should use service questFileRead method answerTypeRows', inject(function() {
+			expect(scope.answerTypes).toEqual(resultAnswerTypeRows);
+		}));
+
+		it('should reset selected', inject(function() {
+			var emptySelected = {};
+			scope.selected = {
+				ques_id: ""
+			};
+			expect(scope.selected).not.toEqual(emptySelected);
+			scope.selectedReset();
+			expect(scope.selected).toEqual(emptySelected);
+		}));
+
+		it('should watch selected.ques_id and update table correctly', inject(function() {
+			scope.selected = {
+				ques_id: ""
+			};
+			expect(scope.table).not.toBeDefined();
+			scope.selected.ques_id = "1";
+			scope.$apply();
+			expect(scope.table[0].count).toEqual(1);
+		}));
+
+		it('should watch selected.ageGroup and update table correctly', inject(function() {
+			scope.selected = {
+				ques_id: "1",
+				ageGroup: ""
+			};
+			expect(scope.table).not.toBeDefined();
+			scope.selected.ageGroup = "2";
+			scope.$apply();
+			expect(scope.table[0].count).toEqual(1);
+		}));
+		
+		it('should watch selected.gender and update table correctly', inject(function() {
+			scope.selected = {
+				ques_id: "1",
+				gender: ""
+			};
+			expect(scope.table).not.toBeDefined();
+			scope.selected.gender = "m";
+			scope.$apply();
+			expect(scope.table[0].count).toEqual(1);
+		}));
+
+	}); //Decribe AnswersGoogleCtrl
 
 	describe('GroupsCtrl controller: ', function() {
 		var scope, groupsCtrlTest;
