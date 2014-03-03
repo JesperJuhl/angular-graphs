@@ -11,10 +11,10 @@ questAppModule.directive('googleChart', function () {
 			$scope.$watch($attr.data, function (value) {
 				var data = new google.visualization.DataTable();
 				data.addColumn('string', 'name');
-				data.addColumn('number', 'votes');
+				data.addColumn('number', 'number');
 
 				angular.forEach(value, function (row) {
-					data.addRow([row.name, row.votes]);
+					data.addRow([row.name, row.number]);
 				});
 
 				var options = {
