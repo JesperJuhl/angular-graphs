@@ -71,13 +71,15 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 				$scope.table = answers;
 				//Count using selections
 				var count = {};
+				if (angular.isDefined($scope.selected.ageGroup)) {
+					var ageInterval = questAgeGroups.getAgeInterval($scope.selected.ageGroup);
+				}
 				for (var i=0;i<$scope.answers.length;i++) {
 					var useValue = true;
 					//check selections: ques_id
 					if ($scope.answers[i].ques_id!=$scope.selected.ques_id) {useValue = false}
 					//check selections: ageGroup
-					if (angular.isDefined($scope.selected.ageGroup)) {
-						var ageInterval = questAgeGroups.getAgeInterval($scope.selected.ageGroup);
+					if (angular.isDefined(ageInterval)) {
 						if ($scope.answers[i].resp_age<ageInterval.from || $scope.answers[i].resp_age>ageInterval.to) {useValue = false}
 					}
 					//check selections: gender
@@ -107,7 +109,7 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 		//Generate bar chart data
 		var highValue = 0;
 		if (angular.isDefined($scope.table)) {
-			var barChartData = {
+			$scope.barChartData = {
 				labels   : new Array(),
 				datasets : new Array()
 			}
@@ -117,14 +119,16 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 				data        : new Array()
 			}
 			for (var i=0;i<$scope.table.length;i++) {
-				barChartData.labels.push($scope.table[i].text);
+				$scope.barChartData.labels.push($scope.table[i].text);
 				barChartSeries.data.push($scope.table[i].count);
-				highValue = Math.max($scope.table[i].count,highValue);
+				highValue = Math.max(highValue,$scope.table[i].count);
 			}
-			barChartData.datasets.push(barChartSeries);
+			$scope.barChartData.datasets.push(barChartSeries);
 		}
-		highValue = highValue+1;
-		var barChartOptions = {
+		highValue++;
+		$scope.barChartType = "Bar";
+		$scope.barChartDimensions = {Height: "300", Width: "600"}		
+		$scope.barChartOptions = {
 			//Boolean - If we show the scale above the chart data			
 			//scaleOverlay : false,
 
@@ -197,9 +201,6 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 			//Function - Fires when the animation is complete
 			//onAnimationComplete : null
 		}
-
-		//Draw chart
-
 	});
 }])
   
@@ -215,6 +216,7 @@ questAppModule.controller('AnswersGoogleCtrl', ['$scope', 'questFileRead','quest
 	$scope.selectedReset = function() {
 		$scope.selected = {};
 	}
+	$scope.tableVisible = false;
 	$scope.$watch('selected.ques_id+selected.gender+selected.ageGroup', function() {
 		//Derive table with number of answers based on selections
 		if (angular.isDefined($scope.selected)) {
@@ -243,13 +245,15 @@ questAppModule.controller('AnswersGoogleCtrl', ['$scope', 'questFileRead','quest
 				$scope.table = answers;
 				//Count using selections
 				var count = {};
+				if (angular.isDefined($scope.selected.ageGroup)) {
+					var ageInterval = questAgeGroups.getAgeInterval($scope.selected.ageGroup);
+				}
 				for (var i=0;i<$scope.answers.length;i++) {
 					var useValue = true;
 					//check selections: ques_id
 					if ($scope.answers[i].ques_id!=$scope.selected.ques_id) {useValue = false}
 					//check selections: ageGroup
-					if (angular.isDefined($scope.selected.ageGroup)) {
-						var ageInterval = questAgeGroups.getAgeInterval($scope.selected.ageGroup);
+					if (angular.isDefined(ageInterval)) {
 						if ($scope.answers[i].resp_age<ageInterval.from || $scope.answers[i].resp_age>ageInterval.to) {useValue = false}
 					}
 					//check selections: gender
@@ -285,6 +289,17 @@ questAppModule.controller('AnswersGoogleCtrl', ['$scope', 'questFileRead','quest
 				"number" : $scope.table[i].count
 			}
 			$scope.barChartData.push(chartValue);
+		}
+	});
+	$scope.$watch('table', function() {
+		if (angular.isDefined($scope.table)) {
+			if (angular.isDefined($scope.table[0])) {
+				$scope.tableVisible = true;
+			} else {
+				$scope.tableVisible = false;
+			}
+		} else {
+			$scope.tableVisible = false;
 		}
 	});
 }])

@@ -1,24 +1,19 @@
 <div ng-controller="AnswersGoogleCtrl">
 
 	<h1 id="answersTitle">Distribution of answers for selected question</h1>
-	<button ng-click="selectedReset()">Clear selections</button>
-	
 	<table>
 		<tr>
+			<td>Question</td>
+			<td>Age Group</td>
+			<td>Gender</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>
-				<div>Select question</div>
 				<select ng-model="selected.ques_id">
 					<option ng-repeat="quest in questions" value={{quest.ques_id}}>{{quest.ques_text}}</option>
 				</select>
 			</td>
-		</tr>
-	</table>
-	<table>
-		<tr>
-			<td>Age Group</td>
-			<td>Gender</td>
-		</tr>
-		<tr>
 			<td>
 				<select ng-model="selected.ageGroup">
 					<option ng-repeat="ageGroup in ageGroups" value={{ageGroup.id}}>{{ageGroup.lgtxt}}</option>
@@ -30,17 +25,13 @@
 					<option value="m">Male</option>
 				</select>
 			</td>
+			<td>
+				<button ng-click="selectedReset()">Clear selections</button>
+			</td>
 		</tr>
 	</table>
-	<div>Result table</div>
-	<table class="gridtable" id="resultTable">
-		<tr>
-		<th ng-repeat="answer in table">{{answer.id}} - {{answer.text}}</th>
-		</tr>
-		<tr>
-		<td ng-repeat="answer in table">{{answer.count}}</td>
-		</tr>
-	</table>
-	<div>Chart</div>
-	<google-chart data="barChartData" type="ColumnChart" title="Number of answers" width="600"></google-chart>
+	<br>
+	<div ng-show="tableVisible">
+		<ova-google-chart data="barChartData" type="ColumnChart" title="Number of answers" width="600"></ova-google-chart>
+	</div>
 </div>

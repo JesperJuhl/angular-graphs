@@ -4,7 +4,7 @@
 
 var questAppModule = angular.module('questApp.directives', []);
 
-questAppModule.directive('googleChart', function () {
+questAppModule.directive('ovaGoogleChart', function () {
 	return {
 		restrict: 'E',
 		link: function ($scope, $elm, $attr) {
@@ -43,5 +43,70 @@ questAppModule.directive('googleChart', function () {
 				chart.draw(data, options);
 			});
 		}
+	}
+});
+
+questAppModule.directive('ovaChartjsChart', function () {
+	//Link function
+	function link(scope, element, attrs) {
+		function drawChart() {
+			//Get canvas
+			var canvas = element.find('canvas');
+			//Get context
+			if (angular.isUndefined(scope.ovaContext)) {
+				scope.ovaContext = canvas[0].getContext('2d');
+			}
+			//Adjust dimensions
+			scope.ovaContext.canvas.width = scope.ovaCanvasDimensions.Width;
+			scope.ovaContext.canvas.height = scope.ovaCanvasDimensions.Height;
+			//Draw chart
+			switch (scope.ovaChartjsType) {
+				case 'Line':
+					scope.ovaChart = new Chart(scope.ovaContext).Line(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+				case 'Bar':
+					scope.ovaChart = new Chart(scope.ovaContext).Bar(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+				case 'Radar':
+					scope.ovaChart = new Chart(scope.ovaContext).Radar(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+				case 'PolarArea':
+					scope.ovaChart = new Chart(scope.ovaContext).PolarArea(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+				case 'Pie':
+					scope.ovaChart = new Chart(scope.ovaContext).Pie(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+				case 'Doughnut':
+					scope.ovaChart = new Chart(scope.ovaContext).Doughnut(scope.ovaChartjsData,scope.ovaChartjsOptions);
+					break;
+			}
+		}
+		function eraseChart() {
+			//Get canvas
+			var canvas = element.find('canvas');
+			//Get context
+			if (angular.isDefined(scope.ovaContext)) {
+				scope.ovaContext.clearRect(0, 0, canvas[0].width, canvas[0].height);
+			}
+		}
+		scope.$watch('ovaChartjsData', function() {
+			if (scope.ovaChartjsData.labels.length>0) {
+				drawChart();
+			} else {
+				eraseChart();
+			}
+		});
+	}
+	//Return options for Compile
+	return {
+		scope: {
+			ovaChartjsOptions: '=options',
+			ovaChartjsData: '=data',
+			ovaChartjsType: '=type',
+			ovaCanvasDimensions: '=dimensions'
+		},
+		restrict: 'E',
+		link: link,
+		template: '<canvas width="{{ovaCanvasDimensions.Width}}" height="{{ovaCanvasDimensions.Height}}"></canvas>'
 	}
 });

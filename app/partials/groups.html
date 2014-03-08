@@ -1,14 +1,19 @@
 <div ng-controller="GroupsCtrl">
 	<h1 id="groupsTitle">Percentage distribution of answers for Age Groups for selected question</h1>
-	<button ng-click="selectedReset()">Clear selections</button>
-	
 	<table>
 		<tr>
-			<td>
+			<td colspan="2">
 				<div>Select question</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<select ng-model="selected.ques_id">
 					<option ng-repeat="quest in questions" value={{quest.ques_id}}>{{quest.ques_text}}</option>
 				</select>
+			</td>
+			<td>
+				<button ng-click="selectedReset()">Clear selections</button>
 			</td>
 		</tr>
 	</table>

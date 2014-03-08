@@ -310,6 +310,17 @@ describe('Question App Controllers: ', function() {
 			expect(scope.table[0].count).toEqual(1);
 		}));
 
+		it('should watch table and update tableVisible accordingly', inject(function() {
+			//Table are changed by changing ques_id
+			scope.selected = {
+				ques_id: ""
+			};
+			expect(scope.tableVisible).toEqual(false);
+			scope.selected.ques_id = "1";
+			scope.$apply();
+			expect(scope.tableVisible).toEqual(true);
+		}));
+
 	}); //Decribe AnswersGoogleCtrl
 
 	describe('GroupsCtrl controller: ', function() {

@@ -27,7 +27,253 @@ questAppModule.factory('questFileRead', ['$resource', function($resource){
 			}
 		}
 	);
-}]);
+}]); //questFileRead
+
+//Service to provide colors for charts
+questAppModule.factory('questColors', function(){
+	return {
+		maxColors: 10,
+		getColors: function(type,number) {
+			//Value to return
+			var colors = new Array();
+			//number must be between 1 and maxColors
+			if (number>=1&&number<=this.maxColors) {
+				var colorsAll = this.colorGroups[type];
+				if (angular.isDefined(colorsAll)) {
+					if (type=="mixed") {
+						//Use from 1 to number
+						for (var i=0;i<number;i++) {
+							colors.push(colorsAll[i]);
+						}
+					} else {
+						//Use 1, 1+step, 1+2*step, ...
+						var step = Math.round((this.maxColors-1)/(number-1));
+						for (var i=0;i<=this.maxColors;i++) {
+							if (i+1<=number) {
+								colors.push(colorsAll[i*step]);
+							}
+						}
+					}
+				}
+			}
+			if (colors.length>0) {
+				return colors;
+			} else {
+				return false;
+			}
+		},
+		colorGroups: {
+			mixed: [
+				{
+					"red": "41"
+					,"green": "64"
+					,"blue": "124"
+				}
+			   ,{
+					"red": "102"
+					,"green": "0"
+					,"blue": "0"
+				}
+			   ,{
+					"red": "32"
+					,"green": "32"
+					,"blue": "32"
+				}
+			   ,{
+					"red": "208"
+					,"green": "133"
+					,"blue": "4"
+				}
+			   ,{
+					"red": "0"
+					,"green": "102"
+					,"blue": "0"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "64"
+				}
+			   ,{
+					"red": "124"
+					,"green": "64"
+					,"blue": "41"
+				}
+			   ,{
+					"red": "128"
+					,"green": "128"
+					,"blue": "128"
+				}
+			   ,{
+					"red": "255"
+					,"green": "255"
+					,"blue": "0"
+				}
+			   ,{
+					"red": "0"
+					,"green": "255"
+					,"blue": "0"
+				}
+			],
+			blue: [
+				{
+					"red": "200"
+					,"green": "200"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "160"
+					,"green": "160"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "120"
+					,"green": "120"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "80"
+					,"green": "80"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "40"
+					,"green": "40"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "204"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "153"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "102"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "51"
+				}
+			],
+			brown: [
+				{
+					"red": "200"
+					,"green": "200"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "160"
+					,"green": "160"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "120"
+					,"green": "120"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "80"
+					,"green": "80"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "40"
+					,"green": "40"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "204"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "153"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "102"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "51"
+				}
+			],
+			red: [
+				{
+					"red": "200"
+					,"green": "200"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "160"
+					,"green": "160"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "120"
+					,"green": "120"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "80"
+					,"green": "80"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "40"
+					,"green": "40"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "255"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "204"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "153"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "102"
+				}
+			   ,{
+					"red": "0"
+					,"green": "0"
+					,"blue": "51"
+				}
+			]
+		}
+	}
+}); //questColors
 
 //Service to handle Age Groups
 questAppModule.factory('questAgeGroups', function(){
@@ -40,7 +286,7 @@ questAppModule.factory('questAgeGroups', function(){
 			}
 		},
 		getAgeInterval : function(id){
-			if (id-1<=this.ageGroups.length && id>1) {
+			if (id<this.ageGroups.length && id>=1) {
 				return { 
 					from : this.ageGroups[id-1].from,
 					to   : this.ageGroups[id-1].to
@@ -48,7 +294,7 @@ questAppModule.factory('questAgeGroups', function(){
 			}
 		},
 		getText : function(id) {
-			if (id<this.ageGroups.length && id>1) {
+			if (id<this.ageGroups.length && id>=1) {
 				return { 
 					sh : this.ageGroups[id-1].shtxt,
 					lg : this.ageGroups[id-1].lgtxt

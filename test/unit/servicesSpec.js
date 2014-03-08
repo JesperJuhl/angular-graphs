@@ -111,6 +111,40 @@ describe('Question App Services: ', function() {
 		
 	}); //Decribe questFileRead
 
+	describe('questColors service: ', function() {
+
+		describe('Functions: ', function() {
+
+			it('getGroup should derive correct set of colors', inject(function(questColors) {
+				//2 colors from "mixed" type 
+				var test01 = questColors.getColors("mixed",2);
+				expect(test01.length).toEqual(2);
+				expect(test01[1].red).toEqual("102");
+				//4 colors from "blue"
+				var test02 = questColors.getColors("blue",4);
+				expect(test02.length).toEqual(4);
+				expect(test02[0].red).toEqual("200");				
+				expect(test02[2].blue).toEqual("204");
+				//8 colors from "red"
+				var test03 = questColors.getColors("red",8);
+				expect(test03.length).toEqual(8);
+				expect(test03[0].green).toEqual("200");				
+				expect(test03[7].blue).toEqual("153");
+				//12 colors (to many) from "brown"
+				var test04 = questColors.getColors("brown",12);
+				expect(test04).toEqual(false);
+				//2 colors from unknown "purple"
+				var test04 = questColors.getColors("purple",2);
+				expect(test04).toEqual(false);
+				//-3 colors from "mixed"
+				var test04 = questColors.getColors("mixed",-3);
+				expect(test04).toEqual(false);
+			}));		
+		
+		}); //Describe Functions
+
+	}); //Decribe questColors
+
 	describe('questAgeGroups service: ', function() {
 		
 		describe('Functions: ', function() {
