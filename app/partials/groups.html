@@ -21,12 +21,12 @@
 	<table class="gridtable" id="resultTable">
 		<tr>
 			<th ng-show="tableVisible">Age Groups</th>
-			<th ng-repeat="header in headerRow">{{header.id}} - {{header.text}}</th>
+			<th ng-show="tableVisible" ng-repeat="header in headerRow">{{header.id}} - {{header.text}}</th>
 		</tr>
 		<tr ng-repeat="answerRow in table">
 		<td>{{answerRow.title.shtxt}}</td>
-		<td ng-repeat="value in answerRow.values">{{value.count}}
+		<td ng-repeat="value in answerRow.values">{{value.pct}}
 		</td>
 		</tr>
-	</table>
+	</table>	
 </div>

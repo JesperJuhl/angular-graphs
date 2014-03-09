@@ -378,19 +378,42 @@ questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGrou
 						}
 					}
 				}
-				//Transfer counted values to table
+				//Transfer counted values to table and sum up totals
+				var totals = new Array();
 				for (var i=0;i<$scope.ageGroups.length;i++) {
+					var ageGroupId = $scope.ageGroups[i].id;
+					totals[ageGroupId] = 0;
 					for (var j=0;j<answerCount;j++) {
-						var ageGroupId = $scope.ageGroups[i].id;
 						if (angular.isDefined(count[ageGroupId])) {
 							var answerId = answers[j].id;
 							if (angular.isDefined(count[ageGroupId][answerId])) {
 								$scope.table[ageGroupId].values[answerId].count = count[ageGroupId][answerId];
+								totals[ageGroupId] = totals[ageGroupId] + count[ageGroupId][answerId];
 							}
 						}
 					}
 				}
-				//Calculated percentages for each group					
+				//Calculated percentages for each group
+				var reminder;
+				for (var i=0;i<$scope.ageGroups.length;i++) {
+					reminder = 100;
+					var ageId = $scope.ageGroups[i].id;
+					if (totals[ageId]>0) {
+						for (var j=0;j<answerCount;j++) {
+							var ansId = answers[j].id;
+							if (j<answerCount-1) {
+								$scope.table[ageId].values[ansId].pct = Math.round(
+									$scope.table[ageId].values[ansId].count 
+									/ totals[ageId]
+									* 100
+								);
+								reminder = reminder - $scope.table[ageId].values[ansId].pct;
+							} else {
+								$scope.table[ageId].values[ansId].pct = reminder;
+							}
+						}
+					}
+				}
 			} else {
 				$scope.table = {}
 			}

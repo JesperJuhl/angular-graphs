@@ -350,9 +350,6 @@ describe('Question App Controllers: ', function() {
 
 		it('should reset selected', inject(function() {
 			var emptySelected = {};
-			scope.selected = {
-				ques_id: ""
-			};
 			expect(scope.selected).not.toEqual(emptySelected);
 			scope.selectedReset();
 			expect(scope.selected).toEqual(emptySelected);
@@ -366,6 +363,22 @@ describe('Question App Controllers: ', function() {
 			scope.selected.ques_id = "2";
 			scope.$apply();
 			expect(scope.table[3].values[1].count).toEqual(1);
+		}));
+
+ 		it('should calculate percentages correctly', inject(function() {
+			scope.selected = {
+				ques_id: ""
+			};
+			scope.selected.ques_id = "2";
+			scope.$apply();
+			var sumPct;
+			for (var i=0;i<=scope.table.length;i++) {
+				sumPct = 0;
+				for (var j=0;j<=scope.table[i].values.length;j++) {
+					sumPct = sumPct + scope.table[i].values[j].pct;
+				}
+				expect(sumPct).toEqual(100);
+			}			
 		}));
 		
 		it('should watch table and update tableVisible accordingly', inject(function() {
