@@ -90,9 +90,9 @@ questAppModule.factory('questColors', function(){
 					,"blue": "0"
 				}
 			   ,{
-					"red": "0"
-					,"green": "0"
-					,"blue": "64"
+					"red": "160"
+					,"green": "160"
+					,"blue": "255"
 				}
 			   ,{
 					"red": "124"

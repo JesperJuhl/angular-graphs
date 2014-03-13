@@ -1,0 +1,34 @@
+<div ng-controller="GroupsChartjsCtrl">
+	<h1 id="groupsTitle">Percentage distribution of answers for Age Groups for selected question</h1>
+	<table>
+		<tr>
+			<td colspan="2">
+				<div>Select question</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<select ng-model="selected.ques_id">
+					<option ng-repeat="quest in questions" value={{quest.ques_id}}>{{quest.ques_text}}</option>
+				</select>
+			</td>
+			<td>
+				<button ng-click="selectedReset()">Clear selections</button>
+			</td>
+		</tr>
+	</table>
+	<div>Result table</div>
+	<table class="gridtable" id="resultTable">
+		<tr>
+			<th ng-show="tableVisible">Age Groups</th>
+			<th ng-show="tableVisible" ng-repeat="header in headerRow">{{header.id}} - {{header.text}}</th>
+		</tr>
+		<tr ng-repeat="answerRow in table">
+		<td>{{answerRow.title.shtxt}}</td>
+		<td ng-repeat="value in answerRow.values">{{value.pct}}
+		</td>
+		</tr>
+	</table>	
+	<br>
+	<ova-chartjs-chart data='lineChartData' options='lineChartOptions' type='lineChartType' dimensions='lineChartDimensions'></ova-google-chart>
+</div>

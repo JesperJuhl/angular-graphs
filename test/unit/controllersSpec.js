@@ -86,6 +86,22 @@ describe('Question App Controllers: ', function() {
 			return resultAnswerTypeRows;
 		}
 	};
+	//questColors
+	var questColorsMock = {
+		getColors: function(type, number) {
+			//just return array with number identical values
+			var colors = new Array();
+			var color = {
+					"red": "124"
+					,"green": "64"
+					,"blue": "41"
+				}
+			for (var i=0;i<number;i++) {
+				colors.push(color);
+			}
+			return colors;
+		}
+	}
 	//questAgeGroups
 	var questAgeGroupsMock = {
 		getGroup: function() {
@@ -180,7 +196,7 @@ describe('Question App Controllers: ', function() {
 		beforeEach(inject(function($rootScope, $controller) {
 			//Get controller
 			scope = $rootScope.$new();
-			answersCtrlTest = $controller('AnswersChartjsCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock} );
+			answersCtrlTest = $controller('AnswersChartjsCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock, questColors: questColorsMock} );
 		}));
 		
 		it('should use service questAgeGroups property ageGroups', inject(function() {
@@ -323,13 +339,13 @@ describe('Question App Controllers: ', function() {
 
 	}); //Decribe AnswersGoogleCtrl
 
-	describe('GroupsCtrl controller: ', function() {
+	describe('GroupsChartjsCtrl controller: ', function() {
 		var scope, groupsCtrlTest;
 
 		//Get controller
 		beforeEach(inject(function($rootScope, $controller) {
 			scope = $rootScope.$new();
-			groupsCtrlTest = $controller('GroupsCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock} );
+			groupsCtrlTest = $controller('GroupsChartjsCtrl', {$scope:scope, questFileRead: questFileReadMock, questAgeGroups: questAgeGroupsMock, questColors: questColorsMock} );
 		}));
 		
 		it('should use service questAgeGroups property ageGroups', inject(function() {
@@ -392,6 +408,6 @@ describe('Question App Controllers: ', function() {
 			expect(scope.tableVisible).toEqual(true);
 		}));
 	
-	}); //Describe GroupsCtrl
+	}); //Describe GroupsChartjsCtrl
 
 }); //Quest App Controllers

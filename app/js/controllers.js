@@ -35,7 +35,7 @@ questAppModule.controller('TableCtrl', ['$scope', 'questFileRead', function($sco
 	}])
 	
 //AnswersChartjsCtrl	
-questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','questAgeGroups' , function($scope, questFileRead, questAgeGroups) {
+questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','questAgeGroups','questColors' , function($scope, questFileRead, questAgeGroups, questColors) {
 	$scope.ageGroups = questAgeGroups.ageGroups;
 	$scope.questions = questFileRead.queryQuestions(); 
 	$scope.answers = questFileRead.queryTable();
@@ -106,28 +106,36 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 		} else {
 			$scope.table = {}
 		}
+		//Get colors for one bar
+		var barColors = questColors.getColors("mixed",1);
 		//Generate bar chart data
 		var highValue = 0;
+		var lowValue = 10000000;
 		if (angular.isDefined($scope.table)) {
 			$scope.barChartData = {
 				labels   : new Array(),
 				datasets : new Array()
 			}
 			var barChartSeries = {
-				fillColor   : "rgba(151,187,205,0.5)",
-				strokeColor : "rgba(151,187,205,1)",
+				fillColor   : "rgba("+barColors[0].red+","+barColors[0].green+","+barColors[0].blue+",0.75)",
+				strokeColor : "rgba("+barColors[0].red+","+barColors[0].green+","+barColors[0].blue+",1)",
 				data        : new Array()
 			}
 			for (var i=0;i<$scope.table.length;i++) {
 				$scope.barChartData.labels.push($scope.table[i].text);
 				barChartSeries.data.push($scope.table[i].count);
 				highValue = Math.max(highValue,$scope.table[i].count);
+				lowValue = Math.min(lowValue,$scope.table[i].count);
 			}
 			$scope.barChartData.datasets.push(barChartSeries);
 		}
 		highValue++;
+		lowValue = Math.max(0,lowValue-1);
+		//Chart type
 		$scope.barChartType = "Bar";
+		//Chart dimensions
 		$scope.barChartDimensions = {Height: "300", Width: "600"}		
+		//Chart options
 		$scope.barChartOptions = {
 			//Boolean - If we show the scale above the chart data			
 			//scaleOverlay : false,
@@ -138,11 +146,11 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 			
 			//** Required if scaleOverride is true **
 			//Number - The number of steps in a hard coded scale
-			scaleSteps : highValue,				
+			scaleSteps : highValue-lowValue,				
 			//Number - The value jump in the hard coded scale
 			scaleStepWidth : 1,
 			//Number - The scale starting value
-			scaleStartValue : 0,
+			scaleStartValue : lowValue,
 
 			//String - Colour of the scale line	
 			//scaleLineColor : "rgba(0,0,0,.1)",
@@ -173,6 +181,7 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 
 			//String - Colour of the grid lines
 			//scaleGridLineColor : "rgba(0,0,0,.05)",
+			scaleGridLineColor : "rgba(0,0,0,.15)",
 
 			//Number - Width of the grid lines
 			//scaleGridLineWidth : 1,	
@@ -185,9 +194,11 @@ questAppModule.controller('AnswersChartjsCtrl', ['$scope', 'questFileRead','ques
 
 			//Number - Spacing between each of the X value sets
 			//barValueSpacing : 5,
+			barValueSpacing : 20,
 
 			//Number - Spacing between data sets within X values
 			//barDatasetSpacing : 1,
+			barDatasetSpacing : 0,
 
 			//Boolean - Whether to animate the chart
 			//animation : true,
@@ -304,8 +315,8 @@ questAppModule.controller('AnswersGoogleCtrl', ['$scope', 'questFileRead','quest
 	});
 }])
 
-//GroupsCtrl
-questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGroups' , function($scope, questFileRead, questAgeGroups) {
+//GroupsChartjsCtrl
+questAppModule.controller('GroupsChartjsCtrl', ['$scope', 'questFileRead','questAgeGroups','questColors' , function($scope, questFileRead, questAgeGroups, questColors) {
 	$scope.ageGroups = questAgeGroups.ageGroups;
 	$scope.questions = questFileRead.queryQuestions(); 
 	$scope.answers = questFileRead.queryTable();
@@ -395,10 +406,14 @@ questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGrou
 				}
 				//Calculated percentages for each group
 				var reminder;
+				var lineNumber = 0;
+				var maxPct = 0;
+				var minPct = 100;
 				for (var i=0;i<$scope.ageGroups.length;i++) {
 					reminder = 100;
 					var ageId = $scope.ageGroups[i].id;
 					if (totals[ageId]>0) {
+						lineNumber++;
 						for (var j=0;j<answerCount;j++) {
 							var ansId = answers[j].id;
 							if (j<answerCount-1) {
@@ -407,6 +422,8 @@ questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGrou
 									/ totals[ageId]
 									* 100
 								);
+								maxPct = Math.max(maxPct, $scope.table[ageId].values[ansId].pct);
+								minPct = Math.min(minPct, $scope.table[ageId].values[ansId].pct);
 								reminder = reminder - $scope.table[ageId].values[ansId].pct;
 							} else {
 								$scope.table[ageId].values[ansId].pct = reminder;
@@ -414,6 +431,139 @@ questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGrou
 						}
 					}
 				}
+				maxPct = maxPct + 10;
+				minPct = Math.max(0, minPct - 10);
+				//Get colors for the relevant number of lines
+				var chartColors = questColors.getColors("mixed",lineNumber);
+				//Generate Line Chart data
+				if (angular.isDefined($scope.table)) {
+					$scope.lineChartData = {
+						labels   : new Array(),
+						datasets : new Array()
+					}
+					for (var i=0;i<$scope.headerRow.length;i++) {
+						$scope.lineChartData.labels.push($scope.headerRow[i].text);
+					}
+					var cix = 0;
+					for (var i=0;i<$scope.ageGroups.length;i++) {
+						var lineChartSeries = {
+							// "rgba("+barColors[0].red+","+barColors[0].green+","+barColors[0].blue+",0.75)",
+							fillColor        : "",
+							strokeColor      : "",
+							pointcolor       : "",
+							pointStrokeColor : "",
+							data             : new Array()
+						}
+						var ageId = $scope.ageGroups[i].id;
+						if (totals[ageId]>0) {
+							lineChartSeries.fillColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",0.75)";
+							lineChartSeries.strokeColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",1)";
+							lineChartSeries.fillColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",0.75)";
+							lineChartSeries.strokeColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",1)";
+							cix++;
+							for (var j=0;j<answerCount;j++) {
+								var ansId = answers[j].id;
+								lineChartSeries.data.push($scope.table[ageId].values[ansId].pct);
+							}
+						}
+						$scope.lineChartData.datasets.push(lineChartSeries);
+					}
+				}
+				//Chart type
+				$scope.lineChartType = "Line";
+				//Chart dimensions
+				$scope.lineChartDimensions = {Height: "300", Width: "600"}		
+				//Chart options
+				$scope.lineChartOptions = {
+
+					//Boolean - If we show the scale above the chart data			
+					//scaleOverlay : false,
+					
+					//Boolean - If we want to override with a hard coded scale
+					//scaleOverride : false,
+					scaleOverride : true,
+					
+					//** Required if scaleOverride is true **
+					//Number - The number of steps in a hard coded scale
+					//scaleSteps : null,
+					scaleSteps : Math.round((maxPct-minPct)/10),
+					//Number - The value jump in the hard coded scale
+					//scaleStepWidth : null,
+					scaleStepWidth : 10,
+					//Number - The scale starting value
+					//scaleStartValue : null,
+					scaleStartValue : Math.round(minPct/10),
+
+					//String - Colour of the scale line	
+					//scaleLineColor : "rgba(0,0,0,.1)",
+					
+					//Number - Pixel width of the scale line	
+					//scaleLineWidth : 1,
+
+					//Boolean - Whether to show labels on the scale	
+					//scaleShowLabels : true,
+					
+					//Interpolated JS string - can access value
+					//scaleLabel : "<%=value%>",
+					
+					//String - Scale label font declaration for the scale label
+					//scaleFontFamily : "'Arial'",
+					
+					//Number - Scale label font size in pixels	
+					//scaleFontSize : 12,
+					
+					//String - Scale label font weight style	
+					//scaleFontStyle : "normal",
+					
+					//String - Scale label font colour	
+					//scaleFontColor : "#666",	
+					
+					///Boolean - Whether grid lines are shown across the chart
+					//scaleShowGridLines : true,
+					
+					//String - Colour of the grid lines
+					//scaleGridLineColor : "rgba(0,0,0,.05)",
+					
+					//Number - Width of the grid lines
+					//scaleGridLineWidth : 1,	
+					
+					//Boolean - Whether the line is curved between points
+					//bezierCurve : true,
+					bezierCurve : false,
+					
+					//Boolean - Whether to show a dot for each point
+					//pointDot : true,
+					
+					//Number - Radius of each point dot in pixels
+					//pointDotRadius : 3,
+					
+					//Number - Pixel width of point dot stroke
+					//pointDotStrokeWidth : 1,
+					
+					//Boolean - Whether to show a stroke for datasets
+					//datasetStroke : true,
+					
+					//Number - Pixel width of dataset stroke
+					//datasetStrokeWidth : 2,
+					datasetStrokeWidth : 4,
+					
+					//Boolean - Whether to fill the dataset with a colour
+					//datasetFill : true,
+					datasetFill : false,
+					
+					//Boolean - Whether to animate the chart
+					//animation : true,
+
+					//Number - Number of animation steps
+					//animationSteps : 60,
+					
+					//String - Animation easing effect
+					//animationEasing : "easeOutQuart",
+
+					//Function - Fires when the animation is complete
+					//onAnimationComplete : null
+
+				}				
 			} else {
 				$scope.table = {}
 			}
@@ -432,4 +582,4 @@ questAppModule.controller('GroupsCtrl', ['$scope', 'questFileRead','questAgeGrou
 			$scope.tableVisible = false;
 		}
 	});
-}])
+}]) //GroupsChartjsCtrl

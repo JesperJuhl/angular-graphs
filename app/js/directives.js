@@ -90,10 +90,12 @@ questAppModule.directive('ovaChartjsChart', function () {
 			}
 		}
 		scope.$watch('ovaChartjsData', function() {
-			if (scope.ovaChartjsData.labels.length>0) {
-				drawChart();
-			} else {
-				eraseChart();
+			if (angular.isDefined(scope.ovaChartjsData)){
+				if (scope.ovaChartjsData.labels.length>0) {
+					drawChart();
+				} else {
+					eraseChart();
+				}
 			}
 		});
 	}
