@@ -9,13 +9,6 @@ questAppModule.directive('ovaGoogleChart', function () {
 		restrict: 'E',
 		link: function ($scope, $elm, $attr) {
 			$scope.$watch($attr.data, function (value) {
-				var data = new google.visualization.DataTable();
-				data.addColumn('string', 'name');
-				data.addColumn('number', 'number');
-
-				angular.forEach(value, function (row) {
-					data.addRow([row.name, row.number]);
-				});
 
 				var options = {
 					title: $attr.title,
@@ -30,7 +23,25 @@ questAppModule.directive('ovaGoogleChart', function () {
 					case('PieChart'):
 						chart = new google.visualization.PieChart($elm[0]);
 						break;
+					case('LineChart'):
+						//Generate data table
+						var data = new google.visualization.DataTable();
+						if (angular.isArray(value)) {
+							data = new google.visualization.arrayToDataTable(value);
+						}
+						//Create chart object
+						chart = new google.visualization.LineChart($elm[0]);
+						break;
 					case('ColumnChart'):
+						//Generate data table
+						var data = new google.visualization.DataTable();
+						data.addColumn('string', 'name');
+						data.addColumn('number', 'number');
+
+						angular.forEach(value, function (row) {
+							data.addRow([row.name, row.number]);
+						});
+						//Create chart object
 						chart = new google.visualization.ColumnChart($elm[0]);
 						break;
 					case('BarChart'):
@@ -80,6 +91,18 @@ questAppModule.directive('ovaChartjsChart', function () {
 					scope.ovaChart = new Chart(scope.ovaContext).Doughnut(scope.ovaChartjsData,scope.ovaChartjsOptions);
 					break;
 			}
+			//Dimensions and colors for legend
+			element.find('div')[0].style.width = canvas[0].style.width;
+			element.find('table')[0].style.margin = "0 auto";
+			var legendSpans = element.find('span');
+			for (var i=0;i<legendSpans.length;i++) {
+				legendSpans[i].style.paddingLeft = "10px";
+				legendSpans[i].style.paddingRight = "10px";
+				if (angular.isDefined(scope.ovaLegend[i])) {
+					legendSpans[i].style.backgroundColor = scope.ovaLegend[i].color;
+					legendSpans[i].style.color = scope.ovaLegend[i].textColor;
+				}
+			}
 		}
 		function eraseChart() {
 			//Get canvas
@@ -105,10 +128,14 @@ questAppModule.directive('ovaChartjsChart', function () {
 			ovaChartjsOptions: '=options',
 			ovaChartjsData: '=data',
 			ovaChartjsType: '=type',
-			ovaCanvasDimensions: '=dimensions'
+			ovaCanvasDimensions: '=dimensions',
+			ovaLegend: '=legend'
 		},
 		restrict: 'E',
 		link: link,
 		template: '<canvas width="{{ovaCanvasDimensions.Width}}" height="{{ovaCanvasDimensions.Height}}"></canvas>'
+				+ '</br><div><table><tr>'
+				+ '<td ng-repeat="legend in ovaLegend"><span>{{legend.text}}</span> </td>'
+				+ '</tr></table></div>'
 	}
 });

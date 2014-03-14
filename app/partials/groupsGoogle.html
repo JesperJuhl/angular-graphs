@@ -1,4 +1,4 @@
-<div ng-controller="GroupsCtrl">
+<div ng-controller="GroupsGoogleCtrl">
 	<h1 id="groupsTitle">Percentage distribution of answers for Age Groups for selected question</h1>
 	<table>
 		<tr>
@@ -29,4 +29,8 @@
 		</td>
 		</tr>
 	</table>	
+	<br>
+	<div ng-show="tableVisible">
+		<ova-google-chart data="lineChartData" type="LineChart" title="Number of answers" width="600"></ova-google-chart>
+	</div>
 </div>

@@ -129,7 +129,7 @@ describe('Question App Services: ', function() {
 				var test03 = questColors.getColors("red",8);
 				expect(test03.length).toEqual(8);
 				expect(test03[0].green).toEqual("200");				
-				expect(test03[7].blue).toEqual("153");
+				expect(test03[4].blue).toEqual("40");
 				//12 colors (to many) from "brown"
 				var test04 = questColors.getColors("brown",12);
 				expect(test04).toEqual(false);

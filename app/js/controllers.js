@@ -435,12 +435,13 @@ questAppModule.controller('GroupsChartjsCtrl', ['$scope', 'questFileRead','quest
 				minPct = Math.max(0, minPct - 10);
 				//Get colors for the relevant number of lines
 				var chartColors = questColors.getColors("mixed",lineNumber);
-				//Generate Line Chart data
+				//Generate Line Chart data and legend
 				if (angular.isDefined($scope.table)) {
 					$scope.lineChartData = {
 						labels   : new Array(),
 						datasets : new Array()
 					}
+					$scope.lineChartLegend = new Array();
 					for (var i=0;i<$scope.headerRow.length;i++) {
 						$scope.lineChartData.labels.push($scope.headerRow[i].text);
 					}
@@ -456,10 +457,12 @@ questAppModule.controller('GroupsChartjsCtrl', ['$scope', 'questFileRead','quest
 						}
 						var ageId = $scope.ageGroups[i].id;
 						if (totals[ageId]>0) {
-							lineChartSeries.fillColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",0.75)";
 							lineChartSeries.strokeColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",1)";
-							lineChartSeries.fillColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",0.75)";
-							lineChartSeries.strokeColor = "rgba("+chartColors[cix].red+","+chartColors[cix].green+","+chartColors[cix].blue+",1)";
+							$scope.lineChartLegend.push({
+								text: questAgeGroups.getText(ageId).sh,
+								color: lineChartSeries.strokeColor,
+								textColor: chartColors[cix].text
+							});
 							cix++;
 							for (var j=0;j<answerCount;j++) {
 								var ansId = answers[j].id;
@@ -583,3 +586,174 @@ questAppModule.controller('GroupsChartjsCtrl', ['$scope', 'questFileRead','quest
 		}
 	});
 }]) //GroupsChartjsCtrl
+
+//GroupsGoogleCtrl
+questAppModule.controller('GroupsGoogleCtrl', ['$scope', 'questFileRead','questAgeGroups','questColors' , function($scope, questFileRead, questAgeGroups, questColors) {
+	$scope.ageGroups = questAgeGroups.ageGroups;
+	$scope.questions = questFileRead.queryQuestions(); 
+	$scope.answers = questFileRead.queryTable();
+	$scope.answerTypes = questFileRead.queryAnswerTypes();
+	$scope.selectedReset = function() {
+		$scope.selected = {};
+	}
+	$scope.tableVisible = false;
+	$scope.$watch('selected.ques_id', function() {
+		//Derive table with number of answers based on selections
+		if (angular.isDefined($scope.selected)) {
+			if (angular.isDefined($scope.selected.ques_id)) {
+				//Get answerType
+				var answerType;
+				for (var i=0;i<$scope.questions.length;i++) {
+					if ($scope.questions[i].ques_id==$scope.selected.ques_id) {
+						answerType = $scope.questions[i].answ_type;
+						break;
+					}
+				}
+				//Get possible answers and set count to 0
+				var answer;
+				var answerCount = 0;
+				var answers = new Array();
+				for (var i=0;i<$scope.answerTypes.length;i++) {
+					if ($scope.answerTypes[i].answ_type==answerType) {
+						answer = {
+							 id    : $scope.answerTypes[i].answ_id
+							,text  : $scope.answerTypes[i].answ_text
+						}
+						answers.push(answer);
+						answerCount++;
+					}
+				}
+				$scope.headerRow = answers;
+				//Create a row with answers for all Age Groups (id's)
+				var answerTable = {};
+				for (var i=0;i<$scope.ageGroups.length;i++) {
+					answerTable[$scope.ageGroups[i].id] = {
+						 title : {
+							 id   : $scope.ageGroups[i].id
+							,shtxt: $scope.ageGroups[i].shtxt
+							,lgtxt: $scope.ageGroups[i].lgtxt
+						}
+						,values: {}
+					};
+					for (var j=0;j<answerCount;j++) {
+						answerTable[$scope.ageGroups[i].id].values[answers[j].id] = {
+							 count: 0
+							,pct  : 0
+						}
+					}	
+				}
+				//Append to scope
+				$scope.table = answerTable;
+				//Count using selections
+				var count = new Array();
+				for (var i=0;i<$scope.answers.length;i++) {
+					//check selections: ques_id
+					if ($scope.answers[i].ques_id==$scope.selected.ques_id) {
+						//Derive ageGroup
+						var ageGroup = questAgeGroups.getGroup($scope.answers[i].resp_age);
+						if (angular.isUndefined(count[ageGroup.id])) {
+							count[ageGroup.id] = new Array();
+						}
+						if (angular.isDefined(count[ageGroup.id][$scope.answers[i].answ_id])) {
+							count[ageGroup.id][$scope.answers[i].answ_id]++;
+						} else {
+							count[ageGroup.id][$scope.answers[i].answ_id] = 1;
+						}
+					}
+				}
+				//Transfer counted values to table and sum up totals
+				var totals = new Array();
+				for (var i=0;i<$scope.ageGroups.length;i++) {
+					var ageGroupId = $scope.ageGroups[i].id;
+					totals[ageGroupId] = 0;
+					for (var j=0;j<answerCount;j++) {
+						if (angular.isDefined(count[ageGroupId])) {
+							var answerId = answers[j].id;
+							if (angular.isDefined(count[ageGroupId][answerId])) {
+								$scope.table[ageGroupId].values[answerId].count = count[ageGroupId][answerId];
+								totals[ageGroupId] = totals[ageGroupId] + count[ageGroupId][answerId];
+							}
+						}
+					}
+				}
+				//Calculated percentages for each group
+				var reminder;
+				var lineNumber = 0;
+				var maxPct = 0;
+				var minPct = 100;
+				for (var i=0;i<$scope.ageGroups.length;i++) {
+					reminder = 100;
+					var ageId = $scope.ageGroups[i].id;
+					if (totals[ageId]>0) {
+						lineNumber++;
+						for (var j=0;j<answerCount;j++) {
+							var ansId = answers[j].id;
+							if (j<answerCount-1) {
+								$scope.table[ageId].values[ansId].pct = Math.round(
+									$scope.table[ageId].values[ansId].count 
+									/ totals[ageId]
+									* 100
+								);
+								maxPct = Math.max(maxPct, $scope.table[ageId].values[ansId].pct);
+								minPct = Math.min(minPct, $scope.table[ageId].values[ansId].pct);
+								reminder = reminder - $scope.table[ageId].values[ansId].pct;
+							} else {
+								$scope.table[ageId].values[ansId].pct = reminder;
+							}
+						}
+					}
+				}
+				maxPct = maxPct + 10;
+				minPct = Math.max(0, minPct - 10);
+				//Get colors for the relevant number of lines
+				var chartColors = questColors.getColors("mixed",lineNumber);
+				//Generate Line Chart data
+				var header = new Array();
+				//First column is answers
+				header.push("Answers");
+				//Following columns represent lines
+				for (var i=0;i<$scope.ageGroups.length;i++) {
+					var ageId = $scope.ageGroups[i].id;
+					if (totals[ageId]>0) {
+						header.push($scope.table[ageId].title.shtxt);
+					}
+				}
+				var dataTable = new Array();
+				dataTable.push(header);
+				//Answer rows
+				for (var j=0;j<answerCount;j++) {
+					var ansId = answers[j].id;
+					var answerRow = new Array();
+					//Answer text in first column
+					answerRow.push(answers[j].text);
+					//Answer values in the following columns
+					for (var i=0;i<$scope.ageGroups.length;i++) {
+						var ageId = $scope.ageGroups[i].id;
+						if (totals[ageId]>0) {
+							answerRow.push($scope.table[ageId].values[ansId].pct);
+						}
+					}
+					//Add row to table
+					dataTable.push(answerRow);
+				}
+				//Add to scope
+				$scope.lineChartData = dataTable;
+			} else {
+				$scope.table = {}
+			}
+		} else {
+			$scope.table = {}
+		}
+	});
+	$scope.$watch('table', function() {
+		if (angular.isDefined($scope.table)) {
+			if (angular.isDefined($scope.table[$scope.ageGroups[0].id])) {
+				$scope.tableVisible = true;
+			} else {
+				$scope.tableVisible = false;
+			}
+		} else {
+			$scope.tableVisible = false;
+		}
+	});
+}]) //GroupsGoogleCtrl

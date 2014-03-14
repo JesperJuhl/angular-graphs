@@ -68,51 +68,61 @@ questAppModule.factory('questColors', function(){
 					"red": "41"
 					,"green": "64"
 					,"blue": "124"
+					,"text": "White"
 				}
 			   ,{
 					"red": "102"
 					,"green": "0"
 					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
 					"red": "32"
 					,"green": "32"
 					,"blue": "32"
+					,"text": "White"
 				}
 			   ,{
 					"red": "208"
 					,"green": "133"
 					,"blue": "4"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "102"
 					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
 					"red": "160"
 					,"green": "160"
 					,"blue": "255"
+					,"text": "Black"
 				}
 			   ,{
 					"red": "124"
 					,"green": "64"
 					,"blue": "41"
+					,"text": "White"
 				}
 			   ,{
 					"red": "128"
 					,"green": "128"
 					,"blue": "128"
+					,"text": "White"
 				}
 			   ,{
 					"red": "255"
 					,"green": "255"
 					,"blue": "0"
+					,"text": "Black"
 				}
 			   ,{
 					"red": "0"
 					,"green": "255"
 					,"blue": "0"
+					,"text": "Black"
 				}
 			],
 			blue: [
@@ -120,155 +130,185 @@ questAppModule.factory('questColors', function(){
 					"red": "200"
 					,"green": "200"
 					,"blue": "255"
+					,"text": "Black"
 				}
 			   ,{
 					"red": "160"
 					,"green": "160"
 					,"blue": "255"
+					,"text": "Black"
 				}
 			   ,{
 					"red": "120"
 					,"green": "120"
 					,"blue": "255"
+					,"text": "Black"
 				}
 			   ,{
 					"red": "80"
 					,"green": "80"
 					,"blue": "255"
+					,"text": "White"
 				}
 			   ,{
 					"red": "40"
 					,"green": "40"
 					,"blue": "255"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "0"
 					,"blue": "255"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "0"
 					,"blue": "204"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "0"
 					,"blue": "153"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "0"
 					,"blue": "102"
+					,"text": "White"
 				}
 			   ,{
 					"red": "0"
 					,"green": "0"
 					,"blue": "51"
+					,"text": "White"
 				}
 			],
 			brown: [
 				{
-					"red": "200"
-					,"green": "200"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "160"
-					,"green": "160"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "120"
-					,"green": "120"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "80"
-					,"green": "80"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "40"
-					,"green": "40"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "0"
-					,"green": "0"
-					,"blue": "255"
-				}
-			   ,{
-					"red": "0"
-					,"green": "0"
+					"red": "255"
+					,"green": "229"
 					,"blue": "204"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "0"
-					,"green": "0"
+					"red": "255"
+					,"green": "204"
 					,"blue": "153"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "0"
-					,"green": "0"
+					"red": "255"
+					,"green": "178"
 					,"blue": "102"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "0"
-					,"green": "0"
+					"red": "255"
+					,"green": "153"
 					,"blue": "51"
+					,"text": "Black"
+				}
+			   ,{
+					"red": "255"
+					,"green": "128"
+					,"blue": "0"
+					,"text": "White"
+				}
+			   ,{
+					"red": "215"
+					,"green": "108"
+					,"blue": "0"
+					,"text": "White"
+				}
+			   ,{
+					"red": "175"
+					,"green": "88"
+					,"blue": "0"
+					,"text": "White"
+				}
+			   ,{
+					"red": "135"
+					,"green": "68"
+					,"blue": "0"
+					,"text": "White"
+				}
+			   ,{
+					"red": "95"
+					,"green": "48"
+					,"blue": "0"
+					,"text": "White"
+				}
+			   ,{
+					"red": "55"
+					,"green": "28"
+					,"blue": "0"
+					,"text": "White"
 				}
 			],
 			red: [
 				{
-					"red": "200"
+					"red": "255"
 					,"green": "200"
-					,"blue": "255"
+					,"blue": "200"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "160"
+					"red": "255"
 					,"green": "160"
-					,"blue": "255"
+					,"blue": "160"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "120"
+					"red": "255"
 					,"green": "120"
-					,"blue": "255"
+					,"blue": "120"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "80"
+					"red": "255"
 					,"green": "80"
-					,"blue": "255"
+					,"blue": "80"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "40"
+					"red": "255"
 					,"green": "40"
-					,"blue": "255"
+					,"blue": "40"
+					,"text": "Black"
 				}
 			   ,{
-					"red": "0"
+					"red": "255"
 					,"green": "0"
-					,"blue": "255"
+					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
-					"red": "0"
+					"red": "204"
 					,"green": "0"
-					,"blue": "204"
+					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
-					"red": "0"
+					"red": "153"
 					,"green": "0"
-					,"blue": "153"
+					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
-					"red": "0"
+					"red": "102"
 					,"green": "0"
-					,"blue": "102"
+					,"blue": "0"
+					,"text": "White"
 				}
 			   ,{
-					"red": "0"
+					"red": "51"
 					,"green": "0"
-					,"blue": "51"
+					,"blue": "0"
+					,"text": "White"
 				}
 			]
 		}
